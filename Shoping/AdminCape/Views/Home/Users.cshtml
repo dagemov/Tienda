@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "User";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb mb-4 mt-4">
+    <li class="breadcrumb-item"><a href="index.html">Resumen</a></li>
+    <li class="breadcrumb-item active">Users</li>
+</ol>
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-users me-1"></i>Users List
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-12">
+                <button type="button" class="btn btn-success">Create new</button>
+            </div>
+        </div>
+        <hr />
+        User Table
+        <!--<table id="IdTableUser" class="table table-dark table-striped display cell-border" style="width : 100%">-->
+        <table id="IdTableUser" class="table table-dark display cell-border" style="width : 100%">
+            <thead>
+                <tr>
+                    <th>Names</th>
+                    <th>LastNames</th>
+                    <th>Emails</th>
+                    <th>Passwords</th>
+                    <th>Activos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--
+    AJAX , para pintar lo que tenemos en la base de datos en la tabla tbody
+-->
+@section scripts{
+    <script>
+        var tablaData;
+        jQuery.ajax({
+            url: '@Url.Action("UsersList", "Home")',
+            type: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                console.log(data)
+            }
+        })
+        $(document).ready(function () {
+            tabladata = $("#IdTableUser").DataTable({
+        // tablaData = $("#IdTableUser").DataTable();
+    </script>      
+}
