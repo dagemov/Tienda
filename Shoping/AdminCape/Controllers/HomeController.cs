@@ -18,6 +18,10 @@ namespace AdminCape.Controllers
         {
             return View();
         }
+        public ActionResult Usuarios()
+        {
+            return View();
+        }
 
         //REMEMBER For UserList yo need do CapeDates SQL CONNECTION AND READER, and COneccion string in webConfig
         [HttpGet]

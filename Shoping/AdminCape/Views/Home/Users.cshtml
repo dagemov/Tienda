@@ -24,11 +24,11 @@
         <table id="IdTableUser" class="table table-dark display cell-border" style="width : 100%">
             <thead>
                 <tr>
-                    <th>Names</th>
-                    <th>LastNames</th>
-                    <th>Emails</th>
-                    <th>Passwords</th>
-                    <th>Activos</th>
+                    <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Names</th>
+                    <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">LastNames</th>
+                    <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Email</th>
+                    <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Password</th>
+                    <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Active</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,23 +40,39 @@
         </table>
     </div>
 </div>
+
 <!--
     AJAX , para pintar lo que tenemos en la base de datos en la tabla tbody
 -->
 @section scripts{
+    <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script>
-        var tablaData;
-        jQuery.ajax({
-            url: '@Url.Action("UsersList", "Home")',
-            type: "GET",
-            dataType: "json",
-            contentType: "application/json; charset=utf-8",
-            success: function (data) {
-                console.log(data)
+
+        var tabladata;
+        var filaSeleccionada;
+        tabladata = $("#IdTableUser").DataTable({
+            responsive: true,
+            ordering: false,
+            "ajax": {
+                url: '@Url.Action("UsersList", "Home")',
+                type: "GET",
+                dataType: "json"
             }
-        })
-        $(document).ready(function () {
-            tabladata = $("#IdTableUser").DataTable({
-        // tablaData = $("#IdTableUser").DataTable();
-    </script>      
+            ,
+            "columns": [
+                { "data": "Nombres" },
+                { "data": "Apellidos" },
+                { "data": "Correo" },
+                { "data": "Clave" },
+                { "data": "Activo" },
+                
+
+            ],          
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
+            },
+        });
+       
+    </script>
+
 }
