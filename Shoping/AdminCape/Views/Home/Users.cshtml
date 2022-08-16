@@ -15,7 +15,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success">Create new</button>
+                <button type="button" class="btn btn-success" onclick="createUser()">Create new</button>
             </div>
         </div>
         <hr />
@@ -33,15 +33,54 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="ModalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title" id="ModalUserCreate">Users Creator</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body g-2">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="Names" class="form-label">Names</label>
+                        <input type="text" class="form-control" id="Names">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="LastNames" class="form-label">LastNames</label>
+                        <input type="text" class="form-control" id="LastNames">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="userEmail" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="userPassword" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="userPassword">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="activeSelect" class="form-label">Active</label>
+                        <select id="activeSelect" class="form-select col-sm-6" >
+                            <option selected>Open this select menu</option>
+                            <option value="1">On</option>
+                            <option value="0">Of</option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!--
     AJAX , para pintar lo que tenemos en la base de datos en la tabla tbody
 -->
@@ -75,20 +114,33 @@
                     }
                 },
                 {
-                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm"><i class="fas fa-pen"></i></button>' +
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-edit"><i class="fas fa-pen"></i></button>' +
                         '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash"></i></button>',
                     "orderable": false,
                     "searchable": false,
                     "width":"90px",
                 }
-                
 
-            ],          
+
+            ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
             },
         });
-       
+        function createUser() {
+            $("#ModalUser").modal("show");
+        }
+        //Action modifict
+        $("#IdTableUser tbody").on("click", '.btn-edit', function () {
+
+            var filaSeleccionada = $(this).closest("tr");
+
+            var data = tabladata.row(filaSeleccionada).data();
+            console.log(data);
+
+            //abrirModal(data)
+
+        });
     </script>
 
 }
