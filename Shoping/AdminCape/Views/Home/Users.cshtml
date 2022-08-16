@@ -64,7 +64,15 @@
                 { "data": "Apellidos" },
                 { "data": "Correo" },
                 { "data": "Clave" },
-                { "data": "Activo" },
+                {
+                    "data": "Activo", "render": function (value) {
+                        if (value) {
+                            return '<span class="badge bg-success">On</span>'
+                        } else {
+                            return '<span class="badge bg-success">Of</span>'
+                        }
+                    }
+                },
                 
 
             ],          
