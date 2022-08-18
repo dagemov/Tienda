@@ -15,7 +15,7 @@
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="createUser()">Create new</button>
+                <button type="button" class="btn btn-success" onclick="createUser(null)">Create new</button>
             </div>
         </div>
         <hr />
@@ -38,7 +38,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="ModalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="ModalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
@@ -46,6 +46,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body g-2">
+                <!--El value es el id =0  cada vez que creamos un usuario , para que al guardar automaticamente
+                    la semilla que teniiamos en el sql que va de 1 + 1 lo agrege-->
+                <input  id="idUSer" type="hidden" value="0"/>
                 <div class="row">
                     <div class="col-sm-6">
                         <label for="Names" class="form-label">Names</label>
@@ -65,8 +68,7 @@
                     </div>
                     <div class="col-sm-6">
                         <label for="activeSelect" class="form-label">Active</label>
-                        <select id="activeSelect" class="form-select col-sm-6" >
-                            <option selected>Open this select menu</option>
+                        <select id="activeSelect" class="form-select col-sm-6">
                             <option value="1">On</option>
                             <option value="0">Of</option>
                         </select>
@@ -76,7 +78,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
             </div>
         </div>
     </div>
@@ -105,11 +107,11 @@
                 { "data": "Correo" },
                 { "data": "Clave" },
                 {
-                    "data": "Activo", "render": function (value) {
-                        if (value) {
+                    "data": "Activo", "render": function (valor) {
+                        if (valor) {
                             return '<span class="badge bg-success">On</span>'
                         } else {
-                            return '<span class="badge bg-success">Of</span>'
+                            return '<span class="badge bg-danger">Of</span>'
                         }
                     }
                 },
@@ -127,7 +129,31 @@
                 "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
             },
         });
-        function createUser() {
+        function createUser(json) {
+            //Inicializa variables del json , para queden guardadas cada vez que damos editar y luego crear
+           
+            $("#Names").val("");
+            $("#LastNames").val("");
+            $("#userEmail").val("");
+            $("#userPassword").val("");
+            $("#activeSelect").val(0);            
+
+            if (json != null) {
+                //El val es lo que esta pusheado en la base de datos (mirar las columns )
+                /*
+                 * Cada vez que se haga un click en el lapiz , este tendra los siguients datos guardados
+                 * del Action modific 
+                */
+                //Tambien con el console.log data podemos ver que valor debe ir en los atributos
+                $("#idUSer").val(json.IdUsuario);
+                $("#Names").val(json.Nombres);
+                $("#LastNames").val(json.Apellidos);
+                $("#userEmail").val(json.Correo);
+                $("#userPassword").val(json.Clave);
+                $("#activeSelect").val(json.Activo == true ? 1 : 0);
+            }
+
+
             $("#ModalUser").modal("show");
         }
         //Action modifict
@@ -138,9 +164,28 @@
             var data = tabladata.row(filaSeleccionada).data();
             console.log(data);
 
-            //abrirModal(data)
+            createUser(data);
 
         });
+        function Save() {
+            var User = {
+                //ejemplo sin procdimienot almacenado (SQL)
+                Activo: $("#activeSelect").val(),//Obtenemos el valor del activo seleccionado del select
+                Apellidos: $("#LastNames").val(),
+                Clave: $("#userPassword").val(),
+                Correo: $("#userEmail").val(),
+                IdUsuario: $("#idUSer").val(),
+                Nombres: $("#Names").val(),
+                Reestablecer: true
+            }
+            if (User.IdUsuario == 0) {
+                tabladata.row.add(User).draw(false);
+            } else {
+                alert("User edit");
+            }
+            //Que se oculte el usuario cuando cumpla la accion
+            $("#ModalUser").modal("hide");
+        }
     </script>
 
 }
