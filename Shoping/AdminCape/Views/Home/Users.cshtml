@@ -109,9 +109,10 @@
                 {
                     "data": "Activo", "render": function (valor) {
                         if (valor) {
-                            return '<span class="badge bg-success">On</span>'
-                        } else {
-                            return '<span class="badge bg-danger">Of</span>'
+                            return '<span class="badge bg-success">On</span>'                                                    
+                        }else{
+                            alert("entre aca")
+                            return '<span class="badge bg-danger">Of</span>'   
                         }
                     }
                 },
@@ -136,7 +137,7 @@
             $("#LastNames").val("");
             $("#userEmail").val("");
             $("#userPassword").val("");
-            $("#activeSelect").val(0);            
+            $("#activeSelect").val(1);            
 
             if (json != null) {
                 //El val es lo que esta pusheado en la base de datos (mirar las columns )
@@ -170,7 +171,7 @@
         function Save() {
             var User = {
                 //ejemplo sin procdimienot almacenado (SQL)
-                Activo: $("#activeSelect").val(),//Obtenemos el valor del activo seleccionado del select
+                Activo: $("#cboactivo").val() == 1 ? true : false, //Obtenemos el valor del activo seleccionado del select poner true o false o no funciona
                 Apellidos: $("#LastNames").val(),
                 Clave: $("#userPassword").val(),
                 Correo: $("#userEmail").val(),
