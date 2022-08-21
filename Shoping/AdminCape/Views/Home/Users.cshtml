@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "User";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -8,20 +7,23 @@
     <li class="breadcrumb-item"><a href="index.html">Resumen</a></li>
     <li class="breadcrumb-item active">Users</li>
 </ol>
+
 <div class="card">
     <div class="card-header">
-        <i class="fas fa-users me-1"></i>Users List
+
+        <i class="fas fa-users me-1"></i> User list
     </div>
+
     <div class="card-body">
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-success" onclick="createUser(null)">Create new</button>
+                <button type="button" class="btn btn-success" onclick="abrirModal(null)">Crete new</button>
             </div>
         </div>
+
         <hr />
-        User Table
-        <!--<table id="IdTableUser" class="table table-dark table-striped display cell-border" style="width : 100%">-->
-        <table id="IdTableUser" class="table table-dark display cell-border" style="width : 100%">
+
+        <table id="tabla" class="table table-dark display cell-border" style="width: 100%">
             <thead>
                 <tr>
                     <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Names</th>
@@ -29,7 +31,7 @@
                     <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Email</th>
                     <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Password</th>
                     <th class="sorting" tabindex="0" aria-controls="TASK_LIST_GRID" rowspan="1" colspan="1">Active</th>
-                    <th>Configurations</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -37,155 +39,183 @@
         </table>
     </div>
 </div>
+
+
+
 <!-- Modal -->
-<div class="modal fade" id="ModalUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+<div class="modal fade" id="FormModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-dark text-white">
-                <h5 class="modal-title" id="ModalUserCreate">Users Creator</h5>
+                <h5 class="modal-title" id="exampleModalLabel">User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body g-2">
-                <!--El value es el id =0  cada vez que creamos un usuario , para que al guardar automaticamente
-                    la semilla que teniiamos en el sql que va de 1 + 1 lo agrege-->
-                <input  id="idUSer" type="hidden" value="0"/>
-                <div class="row">
+            <div class="modal-body">
+
+                <input id="txtid" type="hidden" value="0" />
+
+                <div class="row g-2">
+
+
                     <div class="col-sm-6">
-                        <label for="Names" class="form-label">Names</label>
-                        <input type="text" class="form-control" id="Names">
+                        <label for="txtnombres" class="form-label">Names</label>
+                        <input type="text" class="form-control" id="txtnombres" autocomplete="off">
                     </div>
+
+
                     <div class="col-sm-6">
-                        <label for="LastNames" class="form-label">LastNames</label>
-                        <input type="text" class="form-control" id="LastNames">
+                        <label for="txtapellidos" class="form-label">LasrNames</label>
+                        <input type="text" class="form-control" id="txtapellidos" autocomplete="off">
                     </div>
+
+
                     <div class="col-sm-6">
-                        <label for="userEmail" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="userEmail" placeholder="name@example.com">
+                        <label for="txtcorreo" class="form-label">Email</label>
+                        <input type="text" class="form-control" id="txtcorreo" autocomplete="off">
                     </div>
                     <div class="col-sm-6">
                         <label for="userPassword" class="form-label">Password</label>
                         <input type="password" class="form-control" id="userPassword">
                     </div>
+
                     <div class="col-sm-6">
-                        <label for="activeSelect" class="form-label">Active</label>
-                        <select id="activeSelect" class="form-select col-sm-6">
-                            <option value="1">On</option>
-                            <option value="0">Of</option>
+                        <label for="cboactivo" class="form-label">Active</label>
+                        <select id="cboactivo" class="form-select">
+                            <option value="1">Si</option>
+                            <option value="0">No</option>
                         </select>
                     </div>
+
+
                 </div>
-                
+
+                <div class="row mt-2">
+                    <div class="col-12">
+
+                        <div id="mensajeError" class="alert alert-danger" role="alert">
+                            A simple danger alert—check it out!
+                        </div>
+
+                    </div>
+
+                </div>
+
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="Save()">Save</button>
+                <button type="button" class="btn btn-primary" onclick="Guardar()">Save</button>
             </div>
         </div>
     </div>
 </div>
-<!--
-    AJAX , para pintar lo que tenemos en la base de datos en la tabla tbody
--->
+
+
 @section scripts{
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script>
 
         var tabladata;
         var filaSeleccionada;
-        tabladata = $("#IdTableUser").DataTable({
+
+
+
+        tabladata = $("#tabla").DataTable({
             responsive: true,
             ordering: false,
             "ajax": {
                 url: '@Url.Action("UsersList", "Home")',
                 type: "GET",
                 dataType: "json"
-            }
-            ,
+            },
             "columns": [
-                { "data": "Nombres" },
-                { "data": "Apellidos" },
+                {"data":"Nombres"},
+                {"data":"Apellidos"},
                 { "data": "Correo" },
                 { "data": "Clave" },
                 {
                     "data": "Activo", "render": function (valor) {
                         if (valor) {
-                            return '<span class="badge bg-success">On</span>'                                                    
-                        }else{
-                            alert("entre aca")
-                            return '<span class="badge bg-danger">Of</span>'   
+                            return '<span class="badge bg-success">Si</span>'
+                        } else {
+                            return '<span class="badge bg-danger">No</span>'
                         }
                     }
+
                 },
                 {
-                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-edit"><i class="fas fa-pen"></i></button>' +
-                        '<button type="button" class="btn btn-danger btn-sm ms-2"><i class="fas fa-trash"></i></button>',
+                    "defaultContent": '<button type="button" class="btn btn-primary btn-sm btn-editar"><i class="fas fa-pen"></i></button>' +
+                        '<button type="button" class="btn btn-danger btn-sm ms-2 btn-eliminar"><i class="fas fa-trash"></i></button>',
                     "orderable": false,
                     "searchable": false,
-                    "width":"90px",
+                    "width": "90px"
                 }
-
 
             ],
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json"
-            },
-        });
-        function createUser(json) {
-            //Inicializa variables del json , para queden guardadas cada vez que damos editar y luego crear
-           
-            $("#Names").val("");
-            $("#LastNames").val("");
-            $("#userEmail").val("");
-            $("#userPassword").val("");
-            $("#activeSelect").val(1);            
-
-            if (json != null) {
-                //El val es lo que esta pusheado en la base de datos (mirar las columns )
-                /*
-                 * Cada vez que se haga un click en el lapiz , este tendra los siguients datos guardados
-                 * del Action modific 
-                */
-                //Tambien con el console.log data podemos ver que valor debe ir en los atributos
-                $("#idUSer").val(json.IdUsuario);
-                $("#Names").val(json.Nombres);
-                $("#LastNames").val(json.Apellidos);
-                $("#userEmail").val(json.Correo);
-                $("#userPassword").val(json.Clave);
-                $("#activeSelect").val(json.Activo == true ? 1 : 0);
             }
 
+        });
+        function abrirModal(json) {
 
-            $("#ModalUser").modal("show");
+            $("#txtid").val(0);
+            $("#txtnombres").val("");
+            $("#txtapellidos").val("");
+            $("#txtcorreo").val("");
+            $("#userPassword").val();
+            $("#cboactivo").val(1);
+
+
+            $("#mensajeError").hide();
+
+
+
+            if (json != null) {
+
+
+                $("#txtid").val(json.IdUsuario);
+                $("#txtnombres").val(json.Nombres);
+                $("#txtapellidos").val(json.Apellidos);             
+                $("#txtcorreo").val(json.Correo);
+                $("#userPassword").val(json.Clave);
+                $("#cboactivo").val(json.Activo == true ? 1 : 0);
+
+            }
+
+            $("#FormModal").modal("show");
         }
-        //Action modifict
-        $("#IdTableUser tbody").on("click", '.btn-edit', function () {
 
-            var filaSeleccionada = $(this).closest("tr");
+
+        $("#tabla tbody").on("click", '.btn-editar', function () {
+
+
+            filaSeleccionada = $(this).closest("tr");
 
             var data = tabladata.row(filaSeleccionada).data();
             console.log(data);
+            abrirModal(data)
 
-            createUser(data);
+        })
+        function Guardar() {
 
-        });
-        function Save() {
-            var User = {
-                //ejemplo sin procdimienot almacenado (SQL)
-                Activo: $("#cboactivo").val() == 1 ? true : false, //Obtenemos el valor del activo seleccionado del select poner true o false o no funciona
-                Apellidos: $("#LastNames").val(),
+            var Usuario = {
+
+                IdUsuario: $("#txtid").val(),
+                Activo: $("#cboactivo").val() == 1 ? true : false,
+                Apellidos: $("#txtapellidos").val(),
                 Clave: $("#userPassword").val(),
-                Correo: $("#userEmail").val(),
-                IdUsuario: $("#idUSer").val(),
-                Nombres: $("#Names").val(),
-                Reestablecer: true
+                Correo: $("#txtcorreo").val(),
+                //IdUsuario: $("#idUSer").val(),
+                Nombres: $("#txtnombres").val()
             }
-            if (User.IdUsuario == 0) {
-                tabladata.row.add(User).draw(false);
+            if (Usuario.IdUsuario == 0) {
+
+                tabladata.row.add(Usuario).draw(false);
             } else {
-                alert("User edit");
+                tabladata.row(filaSeleccionada).data(Usuario).draw(false);
             }
-            //Que se oculte el usuario cuando cumpla la accion
-            $("#ModalUser").modal("hide");
+             
         }
     </script>
 

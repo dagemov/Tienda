@@ -25,11 +25,12 @@ namespace AdminCape.Controllers
 
         //REMEMBER For UserList yo need do CapeDates SQL CONNECTION AND READER, and COneccion string in webConfig
         [HttpGet]
-        public JsonResult UsersList() {
+        public JsonResult UsersList()
+        {
 
             List<User> users = new List<User>();
 
-            users =  new CN_Users().List();
+            users = new CN_Users().List();
 
             //return Json(users,JsonRequestBehavior.AllowGet);
             // this shape send Json is for send information for query
@@ -38,6 +39,22 @@ namespace AdminCape.Controllers
             //estructura jSon que recibe data table
 
             return Json(new { data = users }, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult SaveUsers(User user)
+        {
+            object result;
+            string Mensaje=string.Empty;
+            if (user.IdUsuario==0)
+            {
+                result = new CN_Users().Register(user,out Mensaje);
+            }
+            else 
+            {
+                result=new CN_Users().Edit(user,out Mensaje);
+            }
+            return Json(new { result = result,Mensaje=Mensaje}, JsonRequestBehavior.AllowGet);
         }
     }
 }
